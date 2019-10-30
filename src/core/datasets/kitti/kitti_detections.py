@@ -1,6 +1,6 @@
 import os
 
-from .kitti_object import KittiObject
+from kitti_object import KittiObject
 
 
 class KittiDetections():
@@ -20,8 +20,8 @@ class KittiDetections():
         self.detection_dir = os.path.join(self.dataset_dir, "detections", self.split, self.class_)
 
         # Get detection file paths list
-        self.detection_files = [file for file in os.listdir(
-            self.detection_dir) if os.path.isfile(os.path.join(self.detection_dir, file))]
+        self.detection_files = [file for file in sorted(os.listdir(
+            self.detection_dir)) if os.path.isfile(os.path.join(self.detection_dir, file))]
         self.num_samples = self.detection_files.__len__()
 
     def __len__(self):

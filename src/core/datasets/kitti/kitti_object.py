@@ -13,8 +13,8 @@ class KittiObject():
             line [string]: Line in the KITTI object detection text file
         """
         label = line.strip().split(',')
-        self.frame = label[0]
-        self.type = label[1]
+        self.frame = int(label[0])
+        self.type = int(label[1])
 
         # 2D bounding box in pixel coordinates [px]
         self.bbox2d = BBox2D([float(label[2]), float(label[3]),
