@@ -18,9 +18,8 @@ class Tracker():
 
         :return:
         """
-        
-
 
 class Tracklet():
 
     def __init__(self):
+        pass
