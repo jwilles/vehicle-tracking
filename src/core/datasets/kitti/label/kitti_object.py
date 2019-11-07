@@ -1,7 +1,7 @@
 import numpy as np
 from bbox import BBox2D, BBox3D, XYXY
 
-from kitti_label import KittiLabel
+from .kitti_label import KittiLabel
 
 
 class KittiObject(KittiLabel):
@@ -15,6 +15,7 @@ class KittiObject(KittiLabel):
             line [string]: Line in the KITTI object detection text file
         """
         label = line.strip().split(',')
+        params = {}
         params["frame"] = int(label[0])
         params["type"] = int(label[1])
 
@@ -33,4 +34,4 @@ class KittiObject(KittiLabel):
 
         params["alpha"] = float(label[14])
         params["score"] = float(label[6])
-        super(KittiObject, self).init(params)
+        super(KittiObject, self).__init__(params)
