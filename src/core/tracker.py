@@ -1,10 +1,9 @@
 import numpy as np
+import uuid
 from .kf import KalmanFilter
 
 class Tracker():
-    """
-        Global Tracking Manager
-    """
+    """ Global Tracking Manager """
 
     def __init__(self, kitti_frame_detections):
         """
@@ -14,7 +13,7 @@ class Tracker():
         """
         self.frame_detections = kitti_frame_detections
         self.num_frames = kitti_frame_detections.num_frames
-        self.tracklets = []
+        self.tracklet_history = []
         self.current_tracklets = []
         self.current_frame_idx = 0
 
@@ -35,7 +34,7 @@ class Tracker():
             self.destroy_unmatched_tracklets(unmatched_tracklets)
             self.create_tracklets_for_unmatched_detections(unmatched_detections)
 
-        print(self.current_tracklets)
+        print(self.current_tracklets[0].state)
 
 
             #object_predictions = self.get_predictions()
@@ -61,6 +60,7 @@ class Tracklet():
         self.state = detection
         self.covariance = np.diag([1, 1, 1])
         self.kf = KalmanFilter()
+        self.id = uuid.uuid4()
 
     def get_predicted_state(self):
         pass
