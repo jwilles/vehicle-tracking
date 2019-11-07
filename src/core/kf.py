@@ -7,8 +7,8 @@ class KalmanFilter():
         self.frame_rate = 0.1
 
         self.A = np.eye(8)
-        A[1, 4] = self.frame_rate
-        A[2, 5] = self.frame_rate
+        self.A[1, 4] = self.frame_rate
+        self.A[2, 5] = self.frame_rate
 
     def prediction(self):
         pass
@@ -19,7 +19,7 @@ class KalmanFilter():
     def correction(self):
         pass
 
-    def motion(self, state):
+    def update_motion(self, state):
         return np.matmul(self.A, state)
 
     def observation(self):

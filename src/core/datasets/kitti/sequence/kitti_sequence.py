@@ -42,7 +42,7 @@ class KittiSequence():
         objects = self.objects[frame]
         return objects
 
-    def get_objects(self, sequence_file):
+    def get_objects(self, seq_file):
         """
         Get all objects in sequence file
         :param  seq_file [string] : Sequence file
