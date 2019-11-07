@@ -1,6 +1,9 @@
 import os
 import yaml
 
+import sys
+#sys.path.insert(0, os.path.abspath('.'))
+print(sys.path)
 import src
 #import src.core.evaluation.results
 from src.core.datasets.kitti.kitti_detections import KittiDetections
@@ -21,7 +24,7 @@ def main():
     # Load ground truth
     #gt_tracklets =  # TO DO
 
-    tracks = Tracker(kitti_detections[split][class_])
+    tracks = Tracker(kitti_detections['val']['car'])
     tracks.run()
 
     # # Initialize trackers
