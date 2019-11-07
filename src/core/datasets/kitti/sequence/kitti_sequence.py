@@ -19,11 +19,10 @@ class KittiSequence():
 
         # Get all objects in sequence file
         objects = self.get_objects(self.seq_file)
-        self.num_frames = max(object_.frame for object_ in objects)
 
-        self.objects = [ [] for _ in range(self.num_frames + 1)]
+        self.num_frames = objects[-1].frame
+        self.objects = [[] for _ in range(self.num_frames + 1)]
 
-        # Create 2D list for objects where: [frame_no][detection_no]
         for object_ in objects:
             self.objects[object_.frame].append(object_)
 
@@ -49,7 +48,7 @@ class KittiSequence():
         :param  seq_file [string] : Sequence file
         :return objects [list]: List of object labels in sequence file
         """
-        with open(sequence_file, 'r') as file:
+        with open(seq_file, 'r') as file:
             lines = file.readlines()
         objects = [KittiObject(line) for line in lines]
 

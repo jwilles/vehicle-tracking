@@ -1,7 +1,6 @@
-import numpy as np
-from bbox import BBox2D, BBox3D, XYXY
-
-from kitti_label import KittiLabel
+from .kitti_label import KittiLabel
+from ..boundbox.kitti_bbox2d import KittiBBox2D
+from ..boundbox.kitti_bbox3d import KittiBBox3D
 
 
 class KittiTracking(KittiLabel):
@@ -15,25 +14,26 @@ class KittiTracking(KittiLabel):
         :param line [string]: Line in the KITTI object tracking text file
         """
         label = line.strip().split(' ')
+        params = {}
         params["frame"] = int(label[0])
         params["type"] = label[2]
 
         # 2D bounding box in pixel coordinates [px]
-        params["bbox2d"] = BBox2D([float(label[6]), float(label[7]),
-                                   float(label[8]), float(label[9])], mode=XYXY)
+        params["bbox2d"] = KittiBBox2D(x1=float(label[6]), y1=float(label[7]),
+                                       x2=float(label[8]), y2=float(label[9]))
 
         # 3D bounding box in camera coordinates [m,rad]
-        params["bbox3d"] = BBox3D(x=float(label[13]),
-                                  y=float(label[14]),
-                                  z=float(label[15]),
-                                  length=float(label[12]),
-                                  width=float(label[11]),
-                                  height=float(label[10]),
-                                  euler_angles=[0, float(label[16]), 0])
+        params["bbox3d"] = KittiBBox3D(x=float(label[13]),
+                                       y=float(label[14]),
+                                       z=float(label[15]),
+                                       length=float(label[12]),
+                                       width=float(label[11]),
+                                       height=float(label[10]),
+                                       theta=float(label[16]))
 
         params["alpha"] = float(label[5])
-        params["score"] = float(label[17])
-        super(KittiTracking, self).init(params)
+        params["score"] = float(label[17]) if label.__len__() == 18 else -1.0
+        super(KittiTracking, self).__init__(params)
 
         self.track_id = int(label[1])
         self.truncated = float(label[3])
