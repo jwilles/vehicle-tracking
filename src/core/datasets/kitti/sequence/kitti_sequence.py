@@ -1,30 +1,24 @@
 import os
 
-from kitti_object import KittiObject
+from label.kitti_object import KittiObject
 
 
 class KittiSequence():
     """ KITTI Sequence for 3D Multi Object Tracking"""
 
-    def __init__(self, dataset_dir, split='val', class_='car', seq_id):
+    def __init__(self, seq_dir, seq_id):
         """
         Loads the KITTI Sequence
-        :param dataset_dir [string]: Directory to the root of the Kitti object detection dataset
-        :param split       [string]: Detection split [val/test]
-        :param class_      [string]: Object class [car/cyclist/pedestrian]
-        :param seq_id      [int]   : Sequence ID (corresponds with file name)
+        :param seq_path [string]: Directory the sequence file is located
+        :param seq_id   [int]   : Sequence ID (corresponds with file name)
         """
-        self.dataset_dir = os.path.expanduser(dataset_dir)
-        self.split = split
-        self.class_ = class_
+        self.seq_dir = os.path.expanduser(seq_dir)
         self.seq_id = seq_id
-        self.sequence_file = os.path.join(
-            self.dataset_dir, "detections", self.split, self.class_, str(seq_id).zfill(4) + ".txt")
+        self.seq_file = os.path.join(
+            self.seq_dir, str(seq_id).zfill(4) + ".txt")
 
         # Get all objects in sequence file
-        with open(self.sequence_file, 'r') as file:
-            lines = file.readlines()
-        objects = [KittiObject(line) for line in lines]
+        objects = self.get_objects(self.seq_file)
 
         # Create 2D list for objects where: [frame_no][detection_no]
         self.objects = [[]]
@@ -47,4 +41,16 @@ class KittiSequence():
         :return objects [list]: List of object labels for given frame
         """
         objects = self.objects[frame]
+        return objects
+
+    def get_objects(self, seq_file):
+        """
+        Get all objects in sequence file
+        :param  seq_file [string] : Sequence file
+        :return objects [list]: List of object labels in sequence file
+        """
+        with open(sequence_file, 'r') as file:
+            lines = file.readlines()
+        objects = [KittiObject(line) for line in lines]
+
         return objects
