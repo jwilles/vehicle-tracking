@@ -1,5 +1,6 @@
 import numpy as np
 import uuid
+from .kf import KalmanFilter
 
 class Tracklet():
 

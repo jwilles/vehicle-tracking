@@ -2,7 +2,7 @@ import numpy as np
 
 class TrackletAssociator():
 
-    def __init__(self)
+    def __init__(self):
         self.matched_detections = []
         self.unmatched_detections = []
         self.unmatched_tracklets = []
@@ -21,7 +21,7 @@ class TrackletAssociator():
                 difference = np.array([predicted_object_state[0], predicted_object_state[2]]) - np.array([detection.bbox3d.x, detection.bbox3d.z])
                 detection_distance = np.linalg.norm(difference)
 
-                if detection_distance < association_gate and detection_distance < candidate_detection_distance:
+                if detection_distance < self.association_gate and detection_distance < candidate_detection_distance:
                     candidate_detection = detection
                     candidate_detection_distance = detection_distance
                     candidate_detection_idx = i

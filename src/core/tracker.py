@@ -1,5 +1,4 @@
 import numpy as np
-from .kf import KalmanFilter
 from .tracklet import Tracklet
 from .associator import TrackletAssociator
 
@@ -29,7 +28,7 @@ class Tracker():
             self.current_frame_idx = i
             current_object_detections = self.frame_detections[self.current_frame_idx]
 
-            self.tacklet_associator.associate_detections(current_object_detections, self.current_tracklets)
+            self.tracklet_associator.associate_detections(current_object_detections, self.current_tracklets)
 
             self.destroy_unmatched_tracklets(self.tracklet_associator.unmatched_tracklets)
             self.update_matched_tracklets(self.tracklet_associator.matched_detections)
