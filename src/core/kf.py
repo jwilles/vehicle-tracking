@@ -13,6 +13,7 @@ class KalmanFilter():
         self.A[1, 4] = self.frame_rate
         self.A[2, 5] = self.frame_rate
 
+        self.Q = np.eye(8) * 0.1
 
     def update(self, state, covariance, detections):
         self.x = state
@@ -26,7 +27,7 @@ class KalmanFilter():
 
     def update_prediction(self):
         self.x = np.matlmul(self.A, self.x)
-        self.P = self.A @ covariance @ np.transpose(self.A)
+        self.P = self.A @ covariance @ np.transpose(self.A) + self.Q
 
     def update_kalman_gain(self):
         pass
