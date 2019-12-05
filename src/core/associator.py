@@ -11,6 +11,10 @@ class TrackletAssociator():
 
     def associate_detections(self, detections, current_tracklets):
 
+        self.matched_detections = []
+        self.unmatched_detections = []
+        self.unmatched_tracklets = []
+
         for tracklet in current_tracklets:
             predicted_object_state = tracklet.get_predicted_state()
             candidate_detection = None
