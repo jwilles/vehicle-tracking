@@ -29,4 +29,19 @@ class Tracklet():
 
     def update_prediction(self):
         self.x, self.P = self.kf.update_prediction(self.x, self.P)
+
+    def update_correction(self, detection):
+        self.x, self.P = self.kf.update_correction(self.x, self.P, self._format_detection(detection))
+
+    def _format_detection(self, detection):
+        formatted_detction = np.array([
+            detection.bbox3d.x,         
+            detection.bbox3d.y,  
+            detection.bbox3d.z,       
+            detection.bbox3d.theta,   
+            detection.bbox3d.length,
+            detection.bbox3d.width,
+            detection.bbox3d.height,
+        ])
+        return formatted_detction
     

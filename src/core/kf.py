@@ -16,8 +16,7 @@ class KalmanFilter():
 
         # Observation
         self.C = np.eye(7)
-        self.C = np.concatentate(self.C, np.zeros((7, 4)))
-
+        self.C = np.block([self.C,  np.zeros((7, 4))])
         self.R = np.eye(7) * 0.1
 
     def update_prediction(self, x, P):
@@ -25,10 +24,10 @@ class KalmanFilter():
         P = self.A @ P @ np.transpose(self.A) + self.Q
         return x, P
 
-    def update_correction(self, x, P, detection):
-        K = P @ np.transpose(self.C) @ np.linalg.inv()
-        
-         @ P @ np.transpose(self.G) + self.R
-
+    def update_correction(self, x, P, y):
+        K = P @ np.transpose(self.C) @ np.linalg.inv(self.C @ P @ np.transpose(self.C) + self.R)
+        P = (np.eye(11) - K @ self.C) @ P
+        x = x + K @ ( y - self.C @ x )
         return x, P
+
 
