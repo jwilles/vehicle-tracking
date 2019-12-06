@@ -16,7 +16,7 @@ class TrackletAssociator():
         self.unmatched_tracklets = []
 
         for tracklet in current_tracklets:
-            predicted_object_state = tracklet.get_predicted_state()
+            predicted_object_state = tracklet.x
             candidate_detection = None
             candidate_detection_distance = 1000
             candidate_detection_idx = None

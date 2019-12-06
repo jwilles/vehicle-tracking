@@ -1,5 +1,6 @@
 import numpy as np
 import uuid
+import math
 from .kf import KalmanFilter
 
 class Tracklet():
@@ -9,20 +10,23 @@ class Tracklet():
         self.creation_frame_idx = initial_frame
         self.kf = KalmanFilter()
 
-        self.state = np.array([
-            initial_detection.bbox3d.x,
-            initial_detection.bbox3d.y,
-            initial_detection.bbox3d.z,
+        self.initial_velocity = 10
+
+        self.x = np.array([
+            initial_detection.bbox3d.x,         
+            initial_detection.bbox3d.y,  
+            initial_detection.bbox3d.z,       
+            initial_detection.bbox3d.theta,   
+            initial_detection.bbox3d.length,
+            initial_detection.bbox3d.width,
+            initial_detection.bbox3d.height,
+            self.initial_velocity * math.sin(initial_detection.bbox3d.theta),
             0,
-            0,
-            0,
-            initial_detection.bbox3d.theta,
+            self.initial_velocity * math.cos(initial_detection.bbox3d.theta),
             0
         ])
-        self.covariance = np.diag([1, 1, 1])
+        self.P = np.eye(11) * 0.1
 
-    def get_predicted_state(self):
-        return self.kf.update_motion(self.state)
-
-    def update(self):
-        pass
+    def update_prediction(self):
+        self.x, self.P = self.kf.update_prediction(self.x, self.P)
+    
