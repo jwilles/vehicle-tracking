@@ -2,7 +2,6 @@ import os
 
 from .kitti_sequence import KittiSequence
 
-
 class KittiDetections(KittiSequence):
     """ KITTI Detections for 3D Multi Object Tracking"""
 

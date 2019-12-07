@@ -1,0 +1,4 @@
+bbox==0.9.1
+numpy==1.17.3
+pyquaternion==0.9.5
+PyYAML==5.1.2

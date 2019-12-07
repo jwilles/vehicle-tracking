@@ -20,13 +20,11 @@ class KittiSequence():
         # Get all objects in sequence file
         objects = self.get_objects(self.seq_file)
 
-        # Create 2D list for objects where: [frame_no][detection_no]
         self.num_frames = objects[-1].frame
         self.objects = [[] for _ in range(self.num_frames + 1)]
+
         for object_ in objects:
             self.objects[object_.frame].append(object_)
-
-        self.num_frames = self.objects.__len__()
 
     def __len__(self):
         """
