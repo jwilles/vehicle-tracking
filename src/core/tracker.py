@@ -42,7 +42,7 @@ class Tracker():
             self._update_matched_tracklets(self.tracklet_associator.matched_detections)
             self._create_tracklets_for_unmatched_detections(self.tracklet_associator.unmatched_detections)
 
-        print(self.tracklet_history)
+       #print(self.tracklet_history)
 
     def _get_current_detections(self):
         self.current_detections = self.frame_detections[self.current_frame_idx]
@@ -57,7 +57,6 @@ class Tracker():
 
         updated_tracklets = [ match[0] for match in matched_detections]
         self.current_tracklets = updated_tracklets
-        print(self.current_tracklets)
         
     def _destroy_unmatched_tracklets(self, unmatched_tracklets):
         for tracklet in unmatched_tracklets:

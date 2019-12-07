@@ -27,11 +27,21 @@ class Tracklet():
         ])
         self.P = np.eye(11) * 0.1
 
+        self.x = self.x.reshape((11, 1))
+        self.P = self.P.reshape((11, 11, 1))
+
     def update_prediction(self):
-        self.x, self.P = self.kf.update_prediction(self.x, self.P)
+        _x, _P = self.kf.update_prediction(self.x[:, -1], self.P[:, :, -1])
+        #self.x, self.P = self.kf.update_prediction(self.x, self.P)
+
+        _x = _x.reshape((11, 1))
+        _P = _P.reshape((11, 11, 1))
+
+        self.x = np.append(self.x, _x, axis=1)
+        self.P = np.append(self.P, _P, axis=2)
 
     def update_correction(self, detection):
-        self.x, self.P = self.kf.update_correction(self.x, self.P, self._format_detection(detection))
+        self.x[:, -1], self.P[:, :, -1] = self.kf.update_correction(self.x[:, -1], self.P[:, :, -1], self._format_detection(detection))
 
     def _format_detection(self, detection):
         formatted_detction = np.array([
@@ -44,4 +54,3 @@ class Tracklet():
             detection.bbox3d.height,
         ])
         return formatted_detction
-    
