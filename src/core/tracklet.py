@@ -31,6 +31,9 @@ class Tracklet():
         self.x = self.x.reshape((11, 1))
         self.P = self.P.reshape((11, 11, 1))
 
+    def last_frame(self):
+        return self.creation_frame_idx + self.x.shape[1]
+        
     def update_prediction(self):
         _x, _P = self.kf.update_prediction(self.x[:, -1], self.P[:, :, -1])
         #self.x, self.P = self.kf.update_prediction(self.x, self.P)

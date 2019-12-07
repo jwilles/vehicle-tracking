@@ -1,6 +1,9 @@
 import numpy as np
 from .tracklet import Tracklet
 from .associator import TrackletAssociator
+from core.utils.object.object import Object
+from core.utils.object.bound_box2d import BoundBox2D
+from core.utils.object.bound_box3d import BoundBox3D
 
 class Tracker():
     """ Global Tracking Manager """
@@ -42,7 +45,17 @@ class Tracker():
             self._update_matched_tracklets(self.tracklet_associator.matched_detections)
             self._create_tracklets_for_unmatched_detections(self.tracklet_associator.unmatched_detections)
 
+        self.tracklet_history.extend(self.current_tracklets)
+
        #print(self.tracklet_history)
+
+    def get_tracks_by_frame(self):
+        sequence_frame_tracks = []
+        for i in range(self.num_frames + 1):
+            for track in self.tracklet_history:
+                if track.creation_frame_idx <= i  and i <= track.last_frame():
+                    
+
 
     def _get_current_detections(self):
         self.current_detections = self.frame_detections[self.current_frame_idx]

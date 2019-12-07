@@ -17,7 +17,7 @@ def main():
 
     tracks = Tracker(sequence_detections)
     tracks.run()
-
+    
     # print(tracks.tracklet_history)
 
 
