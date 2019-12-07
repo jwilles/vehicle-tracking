@@ -24,7 +24,7 @@ class Tracker():
         Execute Tracking for each Kitti Sequence
         :return:
         """
-        for i in range(self.num_frames + 1):#range(2): #range(self.num_frames + 1):
+        for i in range(self.num_frames + 1): #range(2): #range(self.num_frames + 1):
             self.current_frame_idx = i
             self._get_current_detections()
             self._propogate_tracklets()

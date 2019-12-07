@@ -18,5 +18,7 @@ def main():
     tracks = Tracker(sequence_detections)
     tracks.run()
 
+    #print(tracks.tracklet_history)
+
 if __name__ == '__main__':
     main()
