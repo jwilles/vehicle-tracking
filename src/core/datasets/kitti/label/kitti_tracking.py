@@ -2,6 +2,8 @@ from .kitti_label import KittiLabel
 from ..boundbox.kitti_bbox2d import KittiBBox2D
 from ..boundbox.kitti_bbox3d import KittiBBox3D
 
+# TO DO: Remove this, add to KittiObject
+
 
 class KittiTracking(KittiLabel):
     """ Kitti 3D Multi Object Tracking Label """

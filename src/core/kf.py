@@ -1,10 +1,11 @@
 import numpy as np
 
+
 class KalmanFilter():
 
     def __init__(self):
         self.frame_rate = 0.1
- 
+
         # Motion
         self.A = np.eye(11)
         self.A[0, 7] = self.frame_rate
@@ -27,7 +28,5 @@ class KalmanFilter():
     def update_correction(self, x, P, y):
         K = P @ np.transpose(self.C) @ np.linalg.inv(self.C @ P @ np.transpose(self.C) + self.R)
         P = (np.eye(11) - K @ self.C) @ P
-        x = x + K @ ( y - self.C @ x )
+        x = x + K @ (y - self.C @ x)
         return x, P
-
-
