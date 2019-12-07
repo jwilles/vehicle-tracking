@@ -3,7 +3,7 @@ from core.utils.object.bound_box2d import BoundBox2D
 from core.utils.object.bound_box3d import BoundBox3D
 
 
-class KittiObject(KittiLabel):
+class KittiObject(Object):
     """ Kitti 3D Object Label """
 
     def __init__(self, line):

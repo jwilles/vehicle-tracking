@@ -1,9 +1,9 @@
 import os
 import yaml
 
-import src
-from src.core.datasets.kitti.sequence.kitti_sequence import KittiSequence
-from src.core.tracker import Tracker
+import core
+from core.datasets.kitti.sequence.kitti_sequence import KittiSequence
+from core.tracker import Tracker
 
 
 def main():
@@ -12,8 +12,8 @@ def main():
         config = yaml.full_load(file)
 
     # Load detections
-    dataset_dir = os.path.join(src.core.data_dir(), "KITTI")
-    sequence_detections = KittiSequence(dataset_dir, 0, format="detections")
+    dataset_dir = os.path.join(core.data_dir(), "KITTI")
+    sequence_detections = KittiSequence(dataset_dir, 0, format_="detections")
 
     tracks = Tracker(sequence_detections)
     tracks.run()

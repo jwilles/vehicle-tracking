@@ -13,13 +13,15 @@ class KittiSequence():
         :param seq_id [int]: Sequence ID (corresponds with file name)
         :param format [string]: Format of labels [detection/trackingGT]
         """
-        self.datset_dir = os.path.expanduser(dataset_dir)
-        self.split = split
+        self.dataset_dir = os.path.expanduser(dataset_dir)
         self.seq_id = seq_id
+        self.split = split
+        self.class_ = class_
+        self.format_ = format_
 
-        if format_ == "detections":
+        if self.format_ == "detections":
             self.seq_file = os.path.join(
-                self.dataset_dir, "detections", self.split, self.class_, str(seq_id).zfill(4) + ".txt")
+                self.dataset_dir, self.format_, self.split, self.class_, str(seq_id).zfill(4) + ".txt")
 
         # TO DO
         # elif format_ == "trackingGT":
