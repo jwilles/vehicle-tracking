@@ -6,16 +6,23 @@ from ..label.kitti_object import KittiObject
 class KittiSequence():
     """ KITTI Sequence for 3D Multi Object Tracking"""
 
-    def __init__(self, seq_dir, seq_id):
+    def __init__(self, dataset_dir, seq_id, format_, split='val', class_="car"):
         """
         Loads the KITTI Sequence
-        :param seq_path [string]: Directory the sequence file is located
-        :param seq_id   [int]   : Sequence ID (corresponds with file name)
+        :param dataset_dir [string]: Directory to the root of the Kitti dataset
+        :param seq_id [int]: Sequence ID (corresponds with file name)
+        :param format [string]: Format of labels [detection/trackingGT]
         """
-        self.seq_dir = os.path.expanduser(seq_dir)
+        self.datset_dir = os.path.expanduser(dataset_dir)
+        self.split = split
         self.seq_id = seq_id
-        self.seq_file = os.path.join(
-            self.seq_dir, str(seq_id).zfill(4) + ".txt")
+
+        if format_ == "detections":
+            self.seq_file = os.path.join(
+                self.dataset_dir, "detections", self.split, self.class_, str(seq_id).zfill(4) + ".txt")
+
+        # TO DO
+        # elif format_ == "trackingGT":
 
         # Get all objects in sequence file
         objects = self.get_objects(self.seq_file)
