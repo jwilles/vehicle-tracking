@@ -5,7 +5,6 @@ import src.core
 from src.core.datasets.kitti.sequence.kitti_sequence import KittiSequence
 from src.core.tracker import Tracker
 
-
 def main():
     # Load configuration
     with open("config/test.yaml") as file:
