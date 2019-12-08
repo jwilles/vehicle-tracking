@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
 
-def visualize(objects, camera_calib, output_path, image=None, torch_image=None):
+def visualize(objects, camera_calib, output_path, image=None, torch_image=None, plot2D=False, plot3D=True):
     """
     Visualizes 2D and 3D boxes on image and outputs as image
     Args:
@@ -36,16 +36,32 @@ def visualize(objects, camera_calib, output_path, image=None, torch_image=None):
     else:
         raise ValueError("Invalid argument: image is not None and torch_image is not None")
 
+    if not plot2D and not plot3D:
+        raise ValueError("Invalid argument: plot2D is False and plot3D is False")
+    elif plot2d and not plot3D:
+        subplot_rows = 1
+        axes_2d = axes[0]
+    elif not plotd and plot3D:
+        subplot_rows = 1
+        axes_3d = axes[0]
+    else:
+        subplot_rows = 2
+        axes_2d = axes[0]
+        axes_3d = axes[1]
+
     # Add image to plot
-    fig, axes = image_to_plot(img, subplot_rows=2)
+    fig, axes = image_to_plot(img, subplot_rows=subplot_rows)
 
     # Set box colors for classes
     box_colors = ["g", "c", "y"]
 
     # Overlay boxes on plot
     for obj in objects:
-        overlay_boxes2D(axes=axes[0], obj=obj, box_colors=box_colors)
-        overlay_boxes3D(axes=axes[1], obj=obj, camera_calib=camera_calib, box_colors=box_colors)
+        if plot2D:
+            overlay_boxes2D(axes=axes_2d, obj=obj, box_colors=box_colors)
+        if plot3D:
+            overlay_boxes3D(axes=axes_3d, obj=obj,
+                            camera_calib=camera_calib, box_colors=box_colors)
 
     # Output the plot as image
     output_vis(output_path)
