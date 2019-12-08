@@ -40,7 +40,8 @@ class Tracklet():
         return False
 
     def get_track_frame(self, frame_idx):
-        state_idx = frame_idx - self.creation_frame_idx
+        state_idx = frame_idx - (self.creation_frame_idx + 1)
+        #breakpoint()
         state = self.x[:, state_idx]
         bbox2d = BoundBox2D(0, 0, 0, 0)
         bbox3d = BoundBox3D(

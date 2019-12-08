@@ -18,8 +18,9 @@ def main():
 
     sequence_tracker = Tracker(sequence_detections)
     sequence_tracker.run()
+    # for track in sequence_tracker.tracklet_history:
+    #     print(track.x.shape)
     sequence_tracker.generate_results("/Users/johnwilles/Documents/dev/AER-1513/AER-1513-vehicle-tracking/results")
-
 
 if __name__ == '__main__':
     main()

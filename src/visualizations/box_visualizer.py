@@ -38,19 +38,21 @@ def visualize(objects, camera_calib, output_path, image=None, torch_image=None, 
 
     if not plot2D and not plot3D:
         raise ValueError("Invalid argument: plot2D is False and plot3D is False")
-    elif plot2d and not plot3D:
-        subplot_rows = 1
-        axes_2d = axes[0]
-    elif not plotd and plot3D:
-        subplot_rows = 1
-        axes_3d = axes[0]
-    else:
-        subplot_rows = 2
-        axes_2d = axes[0]
-        axes_3d = axes[1]
+    # elif plot2D and not plot3D:
+    #     subplot_rows = 1
+    #     axes_2d = axes[0]
+    # elif not plotd and plot3D:
+    #     subplot_rows = 1
+    #     axes_3d = axes[0]
+    # else:
+    #     subplot_rows = 2
+    #     axes_2d = axes[0]
+    #     axes_3d = axes[1]
 
     # Add image to plot
+    subplot_rows = 1
     fig, axes = image_to_plot(img, subplot_rows=subplot_rows)
+    axes_3d = axes
 
     # Set box colors for classes
     box_colors = ["g", "c", "y"]

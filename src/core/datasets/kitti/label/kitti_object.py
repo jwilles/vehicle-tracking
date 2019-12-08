@@ -31,8 +31,8 @@ class KittiObject(Object):
                                  theta=float(label[13]))
 
         self.alpha = float(label[14])
-        score = float(label[6])
-
+        score = float(label[6]) 
+        track_id = None
+        
         # Parent class initialization
-        super(KittiObject, self).__init__(
-            class_id, bound_box2d, bound_box3d, score)
+        super(KittiObject, self).__init__(class_id, bound_box2d, bound_box3d, track_id, score)
