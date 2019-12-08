@@ -2,9 +2,9 @@ import numpy as np
 import uuid
 import math
 from .kf import KalmanFilter
-from core.utils.object.object import Object
-from core.utils.object.bound_box2d import BoundBox2D
-from core.utils.object.bound_box3d import BoundBox3D
+from src.core.utils.object.object import Object
+from src.core.utils.object.bound_box2d import BoundBox2D
+from src.core.utils.object.bound_box3d import BoundBox3D
 
 
 class Tracklet():

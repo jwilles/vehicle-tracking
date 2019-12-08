@@ -1,8 +1,8 @@
 import os
 import cv2
 
-from core.datasets.kitti.label.kitti_object import KittiObject
-from core.datasets.kitti.kitti_calib import KittiCalib
+from src.core.datasets.kitti.label.kitti_object import KittiObject
+from src.core.datasets.kitti.kitti_calib import KittiCalib
 
 
 class KittiSequence():

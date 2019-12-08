@@ -1,6 +1,7 @@
 import numpy as np
 from .tracklet import Tracklet
 from .associator import TrackletAssociator
+from ..visualizations.box_visualizer import visualize
 
 
 class Tracker():
@@ -45,7 +46,12 @@ class Tracker():
 
         self.tracklet_history.extend(self.current_tracklets)
 
-       #print(self.tracklet_history)
+    def generate_results(self, output_directory):
+        for i in range(self.num_frames + 1):
+            camera_calib = self.frame_detections.get_calib()
+            image = self.frame_detections.get_image(i)
+            objects = self.get_tracks_by_frame()
+            visualize(objects, camera_calib, output_directory, image=image)
 
     def get_tracks_by_frame(self):
         sequence_frame_tracks = []
@@ -55,6 +61,7 @@ class Tracker():
                 if track.exists_for_frame(i):
                     frame_tracks.append(track.get_track_frame(i))
             sequence_frame_tracks.append(frame_tracks)
+        return sequence_frame_tracks
                     
     def _get_current_detections(self):
         self.current_detections = self.frame_detections[self.current_frame_idx]
