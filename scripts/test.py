@@ -21,7 +21,6 @@ def main():
     tracks.run()
 
     # print(tracks.tracklet_history)
-    breakpoint()
 
 
 if __name__ == '__main__':
