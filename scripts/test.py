@@ -12,8 +12,10 @@ def main():
         config = yaml.full_load(file)
 
     # Load detections
-    dataset_dir = os.path.join(core.data_dir(), "KITTI")
-    sequence_detections = KittiSequence(dataset_dir, 0, format_="detections")
+    detections_dir = os.path.join(core.data_dir(), "KITTI", "detections")
+    dataset_dir = os.path.join("~/Kitti/tracking")
+    sequence_detections = KittiSequence(
+        detections_dir=detections_dir, dataset_dir=dataset_dir, seq_id=0)
 
     tracks = Tracker(sequence_detections)
     tracks.run()
