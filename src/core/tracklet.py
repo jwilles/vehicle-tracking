@@ -2,6 +2,9 @@ import numpy as np
 import uuid
 import math
 from .kf import KalmanFilter
+from core.utils.object.object import Object
+from core.utils.object.bound_box2d import BoundBox2D
+from core.utils.object.bound_box3d import BoundBox3D
 
 
 class Tracklet():
@@ -31,8 +34,26 @@ class Tracklet():
         self.x = self.x.reshape((11, 1))
         self.P = self.P.reshape((11, 11, 1))
 
-    def last_frame(self):
-        return self.creation_frame_idx + self.x.shape[1]
+    def exists_for_frame(self, frame_idx):
+        if self.creation_frame_idx <= frame_idx  and frame_idx <= self._last_frame():
+            return True
+        return False
+
+    def get_track_frame(self, frame_idx):
+        state_idx = frame_idx - self.creation_frame_idx
+        state = self.x[:, state_idx]
+        bbox2d = BoundBox2D(0, 0, 0, 0)
+        bbox3d = BoundBox3D(
+            state[0],
+            state[1],
+            state[2],
+            state[4],
+            state[5],
+            state[6],
+            state[3]
+        )
+        return Object(0, bbox2d, bbox3d, self.id, 1)
+
         
     def update_prediction(self):
         _x, _P = self.kf.update_prediction(self.x[:, -1], self.P[:, :, -1])
@@ -47,6 +68,9 @@ class Tracklet():
     def update_correction(self, detection):
         self.x[:, -1], self.P[:, :, -1] = self.kf.update_correction(
             self.x[:, -1], self.P[:, :, -1], self._format_detection(detection))
+
+    def _last_frame(self):
+        return self.creation_frame_idx + self.x.shape[1]
 
     def _format_detection(self, detection):
         formatted_detction = np.array([

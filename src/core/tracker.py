@@ -1,9 +1,7 @@
 import numpy as np
 from .tracklet import Tracklet
 from .associator import TrackletAssociator
-from core.utils.object.object import Object
-from core.utils.object.bound_box2d import BoundBox2D
-from core.utils.object.bound_box3d import BoundBox3D
+
 
 class Tracker():
     """ Global Tracking Manager """
@@ -52,11 +50,12 @@ class Tracker():
     def get_tracks_by_frame(self):
         sequence_frame_tracks = []
         for i in range(self.num_frames + 1):
+            frame_tracks = []
             for track in self.tracklet_history:
-                if track.creation_frame_idx <= i  and i <= track.last_frame():
+                if track.exists_for_frame(i):
+                    frame_tracks.append(track.get_track_frame(i))
+            sequence_frame_tracks.append(frame_tracks)
                     
-
-
     def _get_current_detections(self):
         self.current_detections = self.frame_detections[self.current_frame_idx]
 
