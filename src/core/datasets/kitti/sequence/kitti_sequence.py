@@ -1,4 +1,5 @@
 import os
+import cv2
 
 from core.datasets.kitti.label.kitti_object import KittiObject
 from core.datasets.kitti.kitti_calib import KittiCalib
@@ -20,10 +21,9 @@ class KittiSequence():
         self.seq_id = seq_id
         self.split = split
         self.class_ = class_
-        self.format_ = format_
 
-        self.seq_file = os.path.join(
-            self.detections_dir, self.format_, self.split, self.class_, str(seq_id).zfill(4) + ".txt")
+        self.detection_file = os.path.join(
+            self.detections_dir, self.split, self.class_, str(seq_id).zfill(4) + ".txt")
 
         # TO DO Add loading for tracking GT
 
@@ -41,7 +41,7 @@ class KittiSequence():
             self.calib_dir = os.path.join(self.calib_dir, 'testing', 'calib')
 
         # Get all objects in sequence file
-        objects = self.get_objects(self.seq_file)
+        objects = self.get_objects(self.detection_file)
 
         self.num_frames = objects[-1].frame
         self.objects = [[] for _ in range(self.num_frames + 1)]
@@ -74,13 +74,13 @@ class KittiSequence():
 
         return image
 
-    def get_objects(self, seq_file):
+    def get_objects(self, detection_file):
         """
-        Get all objects in sequence file
-        :param  seq_file [string] : Sequence file
+        Get all objects in detections file
+        :param  detection_file [string] : Sequence file
         :return objects [list]: List of object labels in sequence file
         """
-        with open(seq_file, 'r') as file:
+        with open(detection_file, 'r') as file:
             lines = file.readlines()
         objects = [KittiObject(line) for line in lines]
 
