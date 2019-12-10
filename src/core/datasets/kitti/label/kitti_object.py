@@ -25,8 +25,8 @@ class KittiObject(Object):
         bound_box3d = BoundBox3D(x=float(label[10]),
                                  y=float(label[11]),
                                  z=float(label[12]),
-                                 z_dim=float(label[9]),
-                                 x_dim=float(label[8]),
+                                 z_dim=float(label[8]),
+                                 x_dim=float(label[9]),
                                  y_dim=float(label[7]),
                                  theta=float(label[13]))
 
