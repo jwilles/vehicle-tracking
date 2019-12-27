@@ -110,7 +110,7 @@ class trackingEvaluation(object):
         # data and parameter
         self.gt_path = gt_path
         self.t_sha = t_sha
-        self.t_path = os.path.join("./results", t_sha, "data")
+        self.t_path = os.path.join("./results", "text", "val", t_sha)
 
         # statistics and numbers for evaluation
         self.n_gt = 0  # number of ground truth detections minus ignored false negatives and true positives
@@ -1113,7 +1113,8 @@ def evaluate(result_sha, mail, eval_3diou, eval_2diou):
         Entry point for evaluation, will load the data and start evaluation for
         CAR and PEDESTRIAN if available.
     """
-    gt_path = os.path.expanduser(os.path.join(core.data_dir(), "KITTI/tracking_GT/val"))
+    gt_path = os.path.join("~/Kitti/tracking/data_tracking_label_2/training/label_02")
+
     # start evaluation and instanciated eval object
     if eval_3diou:
         mail.msg("Processing Result for KITTI 3D MOT Benchmark")
@@ -1206,26 +1207,9 @@ def evaluate(result_sha, mail, eval_3diou, eval_2diou):
 #   - 2D or 3D (using 2D or 3D MOT evaluation system)
 if __name__ == "__main__":
 
-    # check for correct number of arguments. if user_sha and email are not supplied,
-    # no notification email is sent (this option is used for auto-updates)
-    if len(sys.argv) != 2 and len(sys.argv) != 3:
-        print("Usage: python eval_kitti3dmot.py result_sha ?D(e.g. 2D or 3D)")
-        sys.exit(1)
-
-    # get unique sha key of submitted results
-    result_sha = sys.argv[1]
-    mail = mailpy.Mail("")
-    #
-    if len(sys.argv) == 3:
-        if sys.argv[2] == '2D':
-            eval_3diou, eval_2diou = False, True      # eval 2d
-        elif sys.argv[2] == '3D':
-            eval_3diou, eval_2diou = True, False        # eval 3d
-        else:
-            print("Usage: python eval_kitti3dmot.py result_sha ?D(e.g. 2D or 3D)")
-            sys.exit(1)
-    else:
-        eval_3diou, eval_2diou = True, False        # eval 3d
+    result_shas = ["car", "cyclist", "pedestrian"]
+    eval_3diou, eval_2diou = True, False
 
     # evaluate results
-    success = evaluate(result_sha, mail, eval_3diou, eval_2diou)
+    for result_sha in result_shas:
+        success = evaluate(result_sha, mail, eval_3diou, eval_2diou)

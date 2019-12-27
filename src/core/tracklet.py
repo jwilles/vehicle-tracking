@@ -13,7 +13,7 @@ class Tracklet():
         self.id = uuid.uuid4()
         self.creation_frame_idx = initial_frame
         self.kf = KalmanFilter()
-
+        self.class_id = initial_detection.class_id
         self.initial_velocity = 10
 
         self.x = np.array([
@@ -52,7 +52,7 @@ class Tracklet():
             state[6],
             state[3]
         )
-        return Object(0, bbox2d, bbox3d, self.id, 1)
+        return Object(self.class_id, bbox2d, bbox3d, self.id, 1)
 
     def update_prediction(self):
         _x, _P = self.kf.update_prediction(self.x[:, -1], self.P[:, :, -1])

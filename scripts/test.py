@@ -22,7 +22,7 @@ def main():
 
                 # Load detections
                 sequence_detections = KittiSequence(
-                    detections_dir=detections_dir, dataset_dir=dataset_dir, seq_id=seq_id)
+                    detections_dir=detections_dir, dataset_dir=dataset_dir, seq_id=seq_id, split=split, class_=class_)
 
                 sequence_tracker = Tracker(sequence_detections)
                 sequence_tracker.run()
