@@ -1,6 +1,6 @@
-from src.core.utils.object.object import Object
-from src.core.utils.object.bound_box2d import BoundBox2D
-from src.core.utils.object.bound_box3d import BoundBox3D
+from core.utils.object.object import Object
+from core.utils.object.bound_box2d import BoundBox2D
+from core.utils.object.bound_box3d import BoundBox3D
 
 
 class KittiObject(Object):
@@ -31,8 +31,8 @@ class KittiObject(Object):
                                  theta=float(label[13]))
 
         self.alpha = float(label[14])
-        score = float(label[6]) 
+        score = float(label[6])
         track_id = None
-        
+
         # Parent class initialization
         super(KittiObject, self).__init__(class_id, bound_box2d, bound_box3d, track_id, score)

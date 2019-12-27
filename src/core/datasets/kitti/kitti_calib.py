@@ -1,6 +1,6 @@
 import numpy as np
 
-from src.core.utils.calib.camera_calib import CameraCalib
+from core.utils.calib.camera_calib import CameraCalib
 
 
 class KittiCalib:

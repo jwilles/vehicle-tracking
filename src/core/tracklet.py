@@ -2,9 +2,9 @@ import numpy as np
 import uuid
 import math
 from .kf import KalmanFilter
-from src.core.utils.object.object import Object
-from src.core.utils.object.bound_box2d import BoundBox2D
-from src.core.utils.object.bound_box3d import BoundBox3D
+from core.utils.object.object import Object
+from core.utils.object.bound_box2d import BoundBox2D
+from core.utils.object.bound_box3d import BoundBox3D
 
 
 class Tracklet():
@@ -35,13 +35,12 @@ class Tracklet():
         self.P = self.P.reshape((11, 11, 1))
 
     def exists_for_frame(self, frame_idx):
-        if self.creation_frame_idx <= frame_idx  and frame_idx <= self._last_frame():
+        if self.creation_frame_idx <= frame_idx and frame_idx <= self._last_frame():
             return True
         return False
 
     def get_track_frame(self, frame_idx):
         state_idx = frame_idx - (self.creation_frame_idx + 1)
-        #breakpoint()
         state = self.x[:, state_idx]
         bbox2d = BoundBox2D(0, 0, 0, 0)
         bbox3d = BoundBox3D(
@@ -55,7 +54,6 @@ class Tracklet():
         )
         return Object(0, bbox2d, bbox3d, self.id, 1)
 
-        
     def update_prediction(self):
         _x, _P = self.kf.update_prediction(self.x[:, -1], self.P[:, :, -1])
         #self.x, self.P = self.kf.update_prediction(self.x, self.P)

@@ -1,9 +1,9 @@
 import os
 import yaml
 
-import src.core
-from src.core.datasets.kitti.sequence.kitti_sequence import KittiSequence
-from src.core.tracker import Tracker
+import core
+from core.datasets.kitti.sequence.kitti_sequence import KittiSequence
+from core.tracker import Tracker
 
 
 def main():
@@ -29,12 +29,18 @@ def main():
 
                 # Output text predictions
                 if config["output_text"]:
-                    text_file = os.path.join(results_dir, "text", split, class_,
-                                             str(seq_id).zfill(4) + ".txt")
+                    text_dir = os.path.join(results_dir, "text", split, class_)
+
+                    # Make file if doesn't exists
+                    if not os.path.exists(text_dir):
+                        os.makedirs(text_dir)
+
+                    text_file = os.path.join(text_dir, str(seq_id).zfill(4) + ".txt")
+
                     sequence_tracker.generate_text_output(output_file=text_file)
 
                 # Output bounding box visualization
-                if infer_config["output_vis"]:
+                if config["output_vis"]:
                     vis_path = os.path.join(results_dir, "vis", split, class_,
                                             str(seq_id).zfill(4))
                     sequence_tracker.generate_visualization(output_path=vis_path)

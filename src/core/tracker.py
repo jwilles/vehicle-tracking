@@ -4,9 +4,8 @@ import numpy as np
 
 from .tracklet import Tracklet
 from .associator import TrackletAssociator
-from ..visualizations.box_visualizer import visualize
-#from .utils.calib.camera_calib import CameraCalib
-from core.utils.object.object_list import objects_to_text
+from visualizations.box_visualizer import visualize
+from core.utils.object.object_utils import objects_to_text_lines
 
 
 class Tracker():
@@ -62,8 +61,8 @@ class Tracker():
         tracks_by_frame = self.get_tracks_by_frame()
         for i in range(self.num_frames + 1):
             objects = tracks_by_frame[i]
-            frame_text_lines = objects_to_text_lines(objects=objects)
-            text_lines.append(frame_text_lines)
+            frame_text_lines = objects_to_text_lines(frame=i, objects=objects)
+            text_lines = text_lines + frame_text_lines
 
         # Output lines
         with open(output_file, 'w') as file:
