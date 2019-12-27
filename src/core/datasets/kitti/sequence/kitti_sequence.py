@@ -25,22 +25,24 @@ class KittiSequence():
         self.detection_file = os.path.join(
             self.detections_dir, self.split, self.class_, str(seq_id).zfill(4) + ".txt")
 
-        # TO DO Add loading for tracking GT
-
         # Get dataset directories
         self.image_dir = os.path.join(self.dataset_dir, "data_tracking_image_2")
+        self.label_dir = os.path.join(self.dataset_dir, "data_tracking_label_2")
         self.calib_dir = os.path.join(self.dataset_dir, "data_tracking_calib")
 
         if self.split != 'test':
             self.image_dir = os.path.join(self.image_dir, 'training',
                                           "image_02", str(self.seq_id).zfill(4))
+            self.label_dir = os.path.join(self.image_dir, 'training',
+                                          "label_02")
             self.calib_dir = os.path.join(self.calib_dir, 'training', 'calib')
         else:
             self.image_dir = os.path.join(self.image_dir, 'testing',
                                           "image_02", str(self.seq_id).zfill(4))
+            self.label_dir = ""
             self.calib_dir = os.path.join(self.calib_dir, 'testing', 'calib')
 
-        # Get all objects in sequence file
+        # Get all objects in detections file
         objects = self.get_objects(self.detection_file)
 
         self.num_frames = objects[-1].frame
