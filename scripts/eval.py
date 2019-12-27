@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+from __future__ import print_function
 from core.evaluation.box_util import boxoverlap, box3doverlap
-import core.evaluation.mailpy
+from core.evaluation.mailpy import Mail
 from collections import defaultdict
 from core.evaluation.munkres import Munkres
 import core
@@ -12,7 +13,6 @@ import math
 import copy
 import os
 import sys
-from __future__ import print_function
 import matplotlib
 matplotlib.use('Agg')
 try:
@@ -90,7 +90,7 @@ class trackingEvaluation(object):
         # get number of sequences and
         # get number of frames per sequence from test mapping
         # (created while extracting the benchmark)
-        filename_test_mapping = os.path.join(gt_path, evaluate_tracking.seqmap)
+        filename_test_mapping = os.path.join(core.data_dir(), "evaluate_tracking.seqmap")
         self.n_frames = []
         self.sequence_name = []
         with open(filename_test_mapping, "r") as fh:
@@ -1113,7 +1113,7 @@ def evaluate(result_sha, mail, eval_3diou, eval_2diou):
         Entry point for evaluation, will load the data and start evaluation for
         CAR and PEDESTRIAN if available.
     """
-    gt_path = os.path.join("~/Kitti/tracking/data_tracking_label_2/training/label_02")
+    gt_path = os.path.expanduser("~/Kitti/tracking/data_tracking_label_2/training/label_02")
 
     # start evaluation and instanciated eval object
     if eval_3diou:
@@ -1209,6 +1209,7 @@ if __name__ == "__main__":
 
     result_shas = ["car", "cyclist", "pedestrian"]
     eval_3diou, eval_2diou = True, False
+    mail = Mail("")
 
     # evaluate results
     for result_sha in result_shas:
