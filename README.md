@@ -15,7 +15,12 @@ workon vehicle_tracking                                                         
 add2virtualenv src/.                                                            # Add src to PYTHONPATH
 ```
 
-### Running
+### Inference
 ```
 python scripts/test.py
+```
+
+### Evaluation
+```
+python scripts/eval.py
 ```

@@ -1,6 +1,12 @@
+import os
+
 import numpy as np
+
 from .tracklet import Tracklet
 from .associator import TrackletAssociator
+from visualizations.box_visualizer import visualize
+from core.utils.object.object_utils import objects_to_text_lines
+
 
 class Tracker():
     """ Global Tracking Manager """
@@ -24,12 +30,13 @@ class Tracker():
         Execute Tracking for each Kitti Sequence
         :return:
         """
-        for i in range(self.num_frames + 1): #range(2): #range(self.num_frames + 1):
+        for i in range(self.num_frames + 1):  # range(2): #range(self.num_frames + 1):
             self.current_frame_idx = i
             self._get_current_detections()
             self._propogate_tracklets()
 
-            self.tracklet_associator.associate_detections(self.current_detections, self.current_tracklets)
+            self.tracklet_associator.associate_detections(
+                self.current_detections, self.current_tracklets)
 
             # print('-'*40)
             # print(i)
@@ -40,9 +47,46 @@ class Tracker():
 
             self._destroy_unmatched_tracklets(self.tracklet_associator.unmatched_tracklets)
             self._update_matched_tracklets(self.tracklet_associator.matched_detections)
-            self._create_tracklets_for_unmatched_detections(self.tracklet_associator.unmatched_detections)
+            self._create_tracklets_for_unmatched_detections(
+                self.tracklet_associator.unmatched_detections)
 
-       #print(self.tracklet_history)
+        self.tracklet_history.extend(self.current_tracklets)
+
+    def generate_text_output(self, output_file):
+        """
+        Generates text output
+        """
+
+        text_lines = []
+        tracks_by_frame = self.get_tracks_by_frame()
+        for i in range(self.num_frames + 1):
+            objects = tracks_by_frame[i]
+            frame_text_lines = objects_to_text_lines(frame=i, objects=objects)
+            text_lines = text_lines + frame_text_lines
+
+        # Output lines
+        with open(output_file, 'w') as file:
+            file.writelines(text_lines)
+
+    def generate_visualization(self, output_path):
+        tracks_by_frame = self.get_tracks_by_frame()
+        for i in range(self.num_frames + 1):
+            kitti_calib = self.frame_detections.get_calib()
+            camera_calib = kitti_calib.p2
+            image = self.frame_detections.get_image(i)
+            objects = tracks_by_frame[i]
+            frame_output_path = os.path.join(output_path, str(i).zfill(6) + ".png")
+            visualize(objects, camera_calib, frame_output_path, image=image)
+
+    def get_tracks_by_frame(self):
+        sequence_frame_tracks = []
+        for i in range(self.num_frames + 1):
+            frame_tracks = []
+            for track in self.tracklet_history:
+                if track.exists_for_frame(i):
+                    frame_tracks.append(track.get_track_frame(i))
+            sequence_frame_tracks.append(frame_tracks)
+        return sequence_frame_tracks
 
     def _get_current_detections(self):
         self.current_detections = self.frame_detections[self.current_frame_idx]
@@ -55,9 +99,9 @@ class Tracker():
         for match in matched_detections:
             match[0].update_correction(match[1])
 
-        updated_tracklets = [ match[0] for match in matched_detections]
+        updated_tracklets = [match[0] for match in matched_detections]
         self.current_tracklets = updated_tracklets
-        
+
     def _destroy_unmatched_tracklets(self, unmatched_tracklets):
         for tracklet in unmatched_tracklets:
             self.tracklet_history.append(tracklet)

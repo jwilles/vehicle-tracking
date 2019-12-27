@@ -1,2 +1,5 @@
-splits: ['val', 'test']
+splits: ['val']
 classes: ['car', 'pedestrian', 'cyclist']
+num_sequences: 21
+output_text: True
+output_vis: False

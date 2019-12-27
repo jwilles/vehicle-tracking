@@ -25,14 +25,14 @@ class KittiObject(Object):
         bound_box3d = BoundBox3D(x=float(label[10]),
                                  y=float(label[11]),
                                  z=float(label[12]),
-                                 z_dim=float(label[9]),
-                                 x_dim=float(label[8]),
+                                 z_dim=float(label[8]),
+                                 x_dim=float(label[9]),
                                  y_dim=float(label[7]),
                                  theta=float(label[13]))
 
         self.alpha = float(label[14])
         score = float(label[6])
+        track_id = None
 
         # Parent class initialization
-        super(KittiObject, self).__init__(
-            class_id, bound_box2d, bound_box3d, score)
+        super(KittiObject, self).__init__(class_id, bound_box2d, bound_box3d, track_id, score)

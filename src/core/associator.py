@@ -8,7 +8,7 @@ class TrackletAssociator():
         self.unmatched_detections = []
         self.unmatched_tracklets = []
 
-        self.association_gate = 2  # 2m distance threshold
+        self.association_gate = 2 # 2m distance threshold
 
     def associate_detections(self, detections, current_tracklets):
 
