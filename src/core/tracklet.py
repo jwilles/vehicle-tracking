@@ -15,6 +15,7 @@ class Tracklet():
         self.kf = KalmanFilter()
         self.class_id = initial_detection.class_id
         self.initial_velocity = 10
+        self.memory = 0
 
         self.x = np.array([
             initial_detection.bound_box3d.x,
@@ -24,9 +25,9 @@ class Tracklet():
             initial_detection.bound_box3d.x_dim,
             initial_detection.bound_box3d.y_dim,
             initial_detection.bound_box3d.z_dim,
-            self.initial_velocity * math.sin(initial_detection.bound_box3d.theta),
-            0,
             self.initial_velocity * math.cos(initial_detection.bound_box3d.theta),
+            0,
+            self.initial_velocity * math.sin(initial_detection.bound_box3d.theta),
             0
         ])
         self.P = np.eye(11) * 0.1
@@ -38,6 +39,13 @@ class Tracklet():
         if self.creation_frame_idx <= frame_idx and frame_idx <= self._last_frame():
             return True
         return False
+
+    def has_minimum_length(self):
+        state_dim = self.x.shape
+        if state_dim[1] > 30:
+            return True
+        return False
+
 
     def get_track_frame(self, frame_idx):
         state_idx = frame_idx - (self.creation_frame_idx + 1)
@@ -56,7 +64,6 @@ class Tracklet():
 
     def update_prediction(self):
         _x, _P = self.kf.update_prediction(self.x[:, -1], self.P[:, :, -1])
-        #self.x, self.P = self.kf.update_prediction(self.x, self.P)
 
         _x = _x.reshape((11, 1))
         _P = _P.reshape((11, 11, 1))

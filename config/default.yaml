@@ -1,5 +1,5 @@
 splits: ['val']
-classes: ['car', 'pedestrian', 'cyclist']
-num_sequences: 21
+classes: ['car']
+num_sequences: 2
 output_text: True
-output_vis: False
+output_vis: True
