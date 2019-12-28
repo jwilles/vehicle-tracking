@@ -17,20 +17,6 @@ class Tracklet():
         self.initial_velocity = 10
         self.memory = 0
 
-        # self.x = np.array([
-        #     initial_detection.bound_box3d.x,
-        #     initial_detection.bound_box3d.y,
-        #     initial_detection.bound_box3d.z,
-        #     initial_detection.bound_box3d.theta,
-        #     initial_detection.bound_box3d.x_dim,
-        #     initial_detection.bound_box3d.y_dim,
-        #     initial_detection.bound_box3d.z_dim,
-        #     self.initial_velocity * math.sin(initial_detection.bound_box3d.theta),
-        #     0,
-        #     self.initial_velocity * math.cos(initial_detection.bound_box3d.theta),
-        #     0
-        # ])
-
         self.x = np.array([
             initial_detection.bound_box3d.x,
             initial_detection.bound_box3d.y,
@@ -78,7 +64,6 @@ class Tracklet():
 
     def update_prediction(self):
         _x, _P = self.kf.update_prediction(self.x[:, -1], self.P[:, :, -1])
-        #self.x, self.P = self.kf.update_prediction(self.x, self.P)
 
         _x = _x.reshape((11, 1))
         _P = _P.reshape((11, 11, 1))
