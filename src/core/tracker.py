@@ -38,17 +38,23 @@ class Tracker():
             self.tracklet_associator.associate_detections(
                 self.current_detections, self.current_tracklets)
 
-            # print('-'*40)
-            # print(i)
+            print('-'*40)
+            print("Frame: ", i)
             # print("detections: ", self.current_detections)
             # print("unmatched detections: ", self.tracklet_associator.unmatched_detections)
             # print("matched detections: ", self.tracklet_associator.matched_detections)
-            # print("unmatched tracklets: ", self.tracklet_associator.unmatched_tracklets)
+            #print("unmatched tracklets: ", self.tracklet_associator.unmatched_tracklets)
 
-            self._destroy_unmatched_tracklets(self.tracklet_associator.unmatched_tracklets)
-            self._update_matched_tracklets(self.tracklet_associator.matched_detections)
+
+            self._destory_or_update_tracklets(
+                self.tracklet_associator.unmatched_tracklets, self.tracklet_associator.matched_detections)
+            #self._destroy_unmatched_tracklets(self.tracklet_associator.unmatched_tracklets)
+            #self._update_matched_tracklets(self.tracklet_associator.matched_detections)
             self._create_tracklets_for_unmatched_detections(
                 self.tracklet_associator.unmatched_detections)
+
+            for x in self.current_tracklets:
+                print(x.memory)
 
         self.tracklet_history.extend(self.current_tracklets)
 
@@ -95,23 +101,53 @@ class Tracker():
         for tracklet in self.current_tracklets:
             tracklet.update_prediction()
 
-    def _update_matched_tracklets(self, matched_detections):
+    def _destory_or_update_tracklets(self, unmatched_tracklets, matched_detections):
+
         for match in matched_detections:
             match[0].update_correction(match[1])
+            match[0].memory = 0
 
         updated_tracklets = [match[0] for match in matched_detections]
         self.current_tracklets = updated_tracklets
 
-    def _destroy_unmatched_tracklets(self, unmatched_tracklets):
-
         for tracklet in unmatched_tracklets:
             tracklet.memory = tracklet.memory + 1
 
-        unmatched_tracklets = [ x for x in unmatched_tracklets if x.memory > 10]
+        unmatched_tracklets_to_keep = [ x for x in unmatched_tracklets if x.memory < 10 ]
+        unmatched_tracklets_to_delete = [ x for x in unmatched_tracklets if x.memory >= 10]
         
-        for tracklet in unmatched_tracklets:
+        for tracklet in unmatched_tracklets_to_keep:
+            self.current_tracklets.append(tracklet)
+
+        for tracklet in unmatched_tracklets_to_delete:
             self.tracklet_history.append(tracklet)
-            self.current_tracklets = [x for x in self.current_tracklets if x.id != tracklet.id]
+
+
+            # self.tracklet_history.append(tracklet)
+            # self.current_tracklets = [x for x in self.current_tracklets if x.id != tracklet.id]
+
+
+    # def _update_matched_tracklets(self, matched_detections):
+    #     for match in matched_detections:
+    #         match[0].update_correction(match[1])
+
+    #     updated_tracklets = [match[0] for match in matched_detections]
+    #     self.current_tracklets = updated_tracklets
+
+    #     for tracklet in self.current_tracklets:
+    #         tracklet.memory = 0
+
+    # def _destroy_unmatched_tracklets(self, unmatched_tracklets):
+
+    #     for tracklet in unmatched_tracklets:
+    #         tracklet.memory = tracklet.memory + 1
+
+    #     unmatched_tracklets_to_keep = [ x for x in umatched_tracklets if x.memory < 10 ]
+    #     unmatched_tracklets_to_delete = [ x for x in unmatched_tracklets if x.memory >= 10]
+        
+    #     for tracklet in unmatched_tracklets:
+    #         self.tracklet_history.append(tracklet)
+    #         self.current_tracklets = [x for x in self.current_tracklets if x.id != tracklet.id]
 
     def _create_tracklets_for_unmatched_detections(self, unmatched_detections):
         for detection in unmatched_detections:
