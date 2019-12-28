@@ -40,6 +40,13 @@ class Tracklet():
             return True
         return False
 
+    def has_minimum_length(self):
+        state_dim = self.x.shape
+        if state_dim[1] > 30:
+            return True
+        return False
+
+
     def get_track_frame(self, frame_idx):
         state_idx = frame_idx - (self.creation_frame_idx + 1)
         state = self.x[:, state_idx]
