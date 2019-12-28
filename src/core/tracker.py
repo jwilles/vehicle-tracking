@@ -103,6 +103,12 @@ class Tracker():
         self.current_tracklets = updated_tracklets
 
     def _destroy_unmatched_tracklets(self, unmatched_tracklets):
+
+        for tracklet in unmatched_tracklets:
+            tracklet.memory = tracklet.memory + 1
+
+        unmatched_tracklets = [ x for x in unmatched_tracklets if x.memory > 10]
+        
         for tracklet in unmatched_tracklets:
             self.tracklet_history.append(tracklet)
             self.current_tracklets = [x for x in self.current_tracklets if x.id != tracklet.id]

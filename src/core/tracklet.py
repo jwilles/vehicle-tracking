@@ -15,6 +15,7 @@ class Tracklet():
         self.kf = KalmanFilter()
         self.class_id = initial_detection.class_id
         self.initial_velocity = 10
+        self.memory = 0
 
         self.x = np.array([
             initial_detection.bound_box3d.x,
