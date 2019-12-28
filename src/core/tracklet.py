@@ -17,6 +17,20 @@ class Tracklet():
         self.initial_velocity = 10
         self.memory = 0
 
+        # self.x = np.array([
+        #     initial_detection.bound_box3d.x,
+        #     initial_detection.bound_box3d.y,
+        #     initial_detection.bound_box3d.z,
+        #     initial_detection.bound_box3d.theta,
+        #     initial_detection.bound_box3d.x_dim,
+        #     initial_detection.bound_box3d.y_dim,
+        #     initial_detection.bound_box3d.z_dim,
+        #     self.initial_velocity * math.sin(initial_detection.bound_box3d.theta),
+        #     0,
+        #     self.initial_velocity * math.cos(initial_detection.bound_box3d.theta),
+        #     0
+        # ])
+
         self.x = np.array([
             initial_detection.bound_box3d.x,
             initial_detection.bound_box3d.y,
@@ -25,9 +39,9 @@ class Tracklet():
             initial_detection.bound_box3d.x_dim,
             initial_detection.bound_box3d.y_dim,
             initial_detection.bound_box3d.z_dim,
-            self.initial_velocity * math.sin(initial_detection.bound_box3d.theta),
-            0,
             self.initial_velocity * math.cos(initial_detection.bound_box3d.theta),
+            0,
+            self.initial_velocity * math.sin(initial_detection.bound_box3d.theta),
             0
         ])
         self.P = np.eye(11) * 0.1
