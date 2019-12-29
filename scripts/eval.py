@@ -182,7 +182,7 @@ class trackingEvaluation(object):
             Creates directory to store evaluation results and data for visualization.
         """
 
-        self.eval_dir = os.path.join("./results/", self.t_sha, "eval", self.cls)
+        self.eval_dir = os.path.join("./results/eval/", self.t_sha, self.cls)
         if not os.path.exists(self.eval_dir):
             print("create directory:", self.eval_dir, end=' ')
             os.makedirs(self.eval_dir)
@@ -758,6 +758,13 @@ class trackingEvaluation(object):
                     MODP_t = tmpc / float(tmptp)
                 self.MODP_t.append(MODP_t)
 
+            # Output match IDS
+            matches_file = os.path.join(self.eval_dir, "matches_" + str(seq_idx) + ".txt")
+            with open(matches_file, 'w') as file:
+                file.write("gt_id, track_id\n")
+                for gt_id, track_id in seq_trajectories.items():
+                    file.write("{}, {}\n".format(gt_id, track_id))
+
             # remove empty lists for current gt trajectories
             self.gt_trajectories[seq_idx] = seq_trajectories
             self.ign_trajectories[seq_idx] = seq_ignored
@@ -1092,7 +1099,7 @@ class stat:
         # zxc
 
     def plot(self):
-        save_dir = os.path.join("./results", self.t_sha)
+        save_dir = os.path.join("./results/eval", self.t_sha)
 
         self.plot_over_recall(self.mota_list, 'MOTA - Recall Curve', 'MOTA',
                               os.path.join(save_dir, 'MOTA_recall_curve_%s_%s.pdf' % (self.cls, self.suffix)))
@@ -1159,7 +1166,8 @@ def evaluate(result_sha, mail, eval_3diou, eval_2diou):
             suffix = 'eval3D'
         else:
             suffix = 'eval2D'
-        filename = os.path.join("./results", result_sha, "summary_%s_average_%s.txt" % (c, suffix))
+        filename = os.path.join("./results/eval", result_sha,
+                                "summary_%s_average_%s.txt" % (c, suffix))
         dump = open(filename, "w+")
         stat_meter = stat(t_sha=result_sha, cls=c, suffix=suffix, dump=dump)
         e.compute3rdPartyMetrics()
@@ -1207,7 +1215,7 @@ def evaluate(result_sha, mail, eval_3diou, eval_2diou):
 #   - 2D or 3D (using 2D or 3D MOT evaluation system)
 if __name__ == "__main__":
 
-    result_shas = ["car", "cyclist", "pedestrian"]
+    result_shas = ["car"]
     eval_3diou, eval_2diou = True, False
     mail = Mail("")
 
