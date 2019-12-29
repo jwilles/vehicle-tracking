@@ -1,5 +1,5 @@
 splits: ['val']
 classes: ['car']
-num_sequences: 2
+num_sequences: 21
 output_text: True
-output_vis: True
+output_vis: False

@@ -16,6 +16,7 @@ class Tracklet():
         self.class_id = initial_detection.class_id
         self.initial_velocity = 10
         self.memory = 0
+        self.scores = np.array([initial_detection.score])
 
         self.x = np.array([
             initial_detection.bound_box3d.x,
@@ -46,7 +47,6 @@ class Tracklet():
             return True
         return False
 
-
     def get_track_frame(self, frame_idx):
         state_idx = frame_idx - (self.creation_frame_idx + 1)
         state = self.x[:, state_idx]
@@ -60,7 +60,7 @@ class Tracklet():
             state[6],
             state[3]
         )
-        return Object(self.class_id, bbox2d, bbox3d, self.id, 1)
+        return Object(self.class_id, bbox2d, bbox3d, self.id, np.mean(self.scores))
 
     def update_prediction(self):
         _x, _P = self.kf.update_prediction(self.x[:, -1], self.P[:, :, -1])
@@ -74,6 +74,7 @@ class Tracklet():
     def update_correction(self, detection):
         self.x[:, -1], self.P[:, :, -1] = self.kf.update_correction(
             self.x[:, -1], self.P[:, :, -1], self._format_detection(detection))
+        self.scores = np.append(self.scores, detection.score)
 
     def _last_frame(self):
         return self.creation_frame_idx + self.x.shape[1]
