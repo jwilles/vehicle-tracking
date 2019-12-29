@@ -1,5 +1,6 @@
 import os
 import yaml
+import time
 
 import core
 from core.datasets.kitti.sequence.kitti_sequence import KittiSequence
@@ -15,7 +16,8 @@ def main():
     detections_dir = os.path.join(core.data_dir(), "detections")
     dataset_dir = os.path.join("~/Kitti/tracking")
     results_dir = os.path.join(core.top_dir(), "results")
-
+    duration = 0
+    frames = 0
     for split in config["splits"]:
         for class_ in config["classes"]:
             for seq_id in range(config["num_sequences"]):
@@ -25,8 +27,11 @@ def main():
                 sequence_detections = KittiSequence(
                     detections_dir=detections_dir, dataset_dir=dataset_dir, seq_id=seq_id, split=split, class_=class_)
 
+                start = time.time()
                 sequence_tracker = Tracker(sequence_detections)
                 sequence_tracker.run()
+                duration = duration + (time.time() - start)
+                frames = frames + len(sequence_detections)
 
                 # Output text predictions
                 if config["output_text"]:
@@ -45,6 +50,8 @@ def main():
                     vis_path = os.path.join(results_dir, "vis", split, class_,
                                             str(seq_id).zfill(4))
                     sequence_tracker.generate_visualization(output_path=vis_path)
+
+    print("FPS {}".format(frames/duration))
 
 
 if __name__ == '__main__':
