@@ -19,6 +19,7 @@ def main():
     for split in config["splits"]:
         for class_ in config["classes"]:
             for seq_id in range(config["num_sequences"]):
+                print("Processing: {}".format(seq_id))
 
                 # Load detections
                 sequence_detections = KittiSequence(
