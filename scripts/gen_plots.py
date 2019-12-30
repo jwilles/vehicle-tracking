@@ -19,7 +19,8 @@ def main():
     results_dir = os.path.join(core.top_dir(), "results")
     plot_dir = os.path.join(results_dir, "plots")
     make_dir(plot_dir)
-    ylabels = ["$x$ [m]", "$y$ [m]", "$x$ [m]", "$\theta$ [rad]", "$l$ [m]", "$h$ [m]", "$w$ [m]"]
+    ylabels = [r"$x$ [m]", r"$y$ [m]", r"$z$ [m]",
+               r"$\theta$ [rad]", r"$l$ [m]", r"$h$ [m]", r"$w$ [m]"]
     for split in config["splits"]:
         for class_ in config["classes"]:
             seq_id = 15
@@ -46,11 +47,24 @@ def main():
             error[3, :] = np.unwrap(error[3, :])
             var = np.transpose(P.diagonal())
             std_dev = np.sqrt(var)
+
+            fig = plt.figure(figsize=(12, 7))
+            plot_file = os.path.join(plot_dir, "error.png")
             for i, ylabel in enumerate(ylabels):
-                plot_file = os.path.join(plot_dir, str(i) + ".png")
-                plt.plot(t, error[i, :], t, 3*std_dev[i, :], 'r--', t, -3*std_dev[i, :], 'r--')
-                plt.savefig(plot_file)
-                plt.close()
+                ax = fig.add_subplot(241 + i)
+                line1 = ax.plot(t, error[i, :])
+                line2 = ax.plot(t, 3*std_dev[i, :], 'r--',
+                                t, -3*std_dev[i, :], 'r--')[0]
+                ax.set_xlabel('Frame')
+                ax.set_ylabel(ylabel)
+
+            fig.legend([line1, line2],
+                       labels=['Error', 'Uncertainty Envelope'],
+                       bbox_to_anchor=(0.97, 0.28),
+                       loc="center right")
+            plt.tight_layout()
+            plt.savefig(plot_file)
+            plt.close()
 
 
 if __name__ == '__main__':
