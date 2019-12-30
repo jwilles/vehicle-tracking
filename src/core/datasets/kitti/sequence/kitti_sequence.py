@@ -1,5 +1,6 @@
 import os
 import cv2
+import numpy as np
 
 from core.datasets.kitti.label.kitti_object import KittiObject
 from core.datasets.kitti.kitti_calib import KittiCalib
@@ -33,7 +34,7 @@ class KittiSequence():
         if self.split != 'test':
             self.image_dir = os.path.join(self.image_dir, 'training',
                                           "image_02", str(self.seq_id).zfill(4))
-            self.label_dir = os.path.join(self.image_dir, 'training',
+            self.label_dir = os.path.join(self.label_dir, 'training',
                                           "label_02")
             self.calib_dir = os.path.join(self.calib_dir, 'training', 'calib')
         else:
@@ -43,13 +44,13 @@ class KittiSequence():
             self.calib_dir = os.path.join(self.calib_dir, 'testing', 'calib')
 
         # Get all objects in detections file
-        objects = self.get_objects(self.detection_file)
+        detections = self.get_objects(self.detection_file)
 
-        self.num_frames = objects[-1].frame
-        self.objects = [[] for _ in range(self.num_frames + 1)]
+        self.num_frames = detections[-1].frame
+        self.detections = [[] for _ in range(self.num_frames + 1)]
 
-        for object_ in objects:
-            self.objects[object_.frame].append(object_)
+        for detection in detections:
+            self.detections[detection.frame].append(detection)
 
     def __len__(self):
         """
@@ -60,12 +61,12 @@ class KittiSequence():
 
     def __getitem__(self, frame):
         """
-        Retrieves all object labels at specific frame
+        Retrieves all detections at specific frame
         :param  frame   [int] : Frame number
-        :return objects [list]: List of object labels for given frame
+        :return detections [list]: List of object detections for given frame
         """
-        objects = self.objects[frame]
-        return objects
+        detections = self.detections[frame]
+        return detections
 
     def get_image(self, frame):
         """
@@ -76,17 +77,39 @@ class KittiSequence():
 
         return image
 
-    def get_objects(self, detection_file):
+    def get_objects(self, objects_file, format_="detection"):
         """
-        Get all objects in detections file
-        :param  detection_file [string] : Sequence file
+        Get all objects in file
+        :param  objects_file [string] : Sequence file
         :return objects [list]: List of object labels in sequence file
         """
-        with open(detection_file, 'r') as file:
+        with open(objects_file, 'r') as file:
             lines = file.readlines()
-        objects = [KittiObject(line) for line in lines]
+        objects = [KittiObject(line, format_) for line in lines]
 
         return objects
+
+    def get_track(self, track_id):
+        """
+        Gets track from labels
+        """
+        label_file = os.path.join(self.label_dir, str(self.seq_id).zfill(4) + ".txt")
+        objects = self.get_objects(label_file, format_="track")
+        track = np.empty((7, 0))
+
+        for object_ in objects:
+            if object_.track_id == track_id:
+                state = np.array([object_.bound_box3d.x,
+                                  object_.bound_box3d.y,
+                                  object_.bound_box3d.z,
+                                  object_.bound_box3d.theta,
+                                  object_.bound_box3d.x_dim,
+                                  object_.bound_box3d.y_dim,
+                                  object_.bound_box3d.z_dim])
+                state = state.reshape((7, 1))
+                track = np.append(track, state, axis=1)
+
+        return track
 
     def get_calib(self):
         """

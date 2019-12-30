@@ -6,6 +6,7 @@ from .tracklet import Tracklet
 from .associator import TrackletAssociator
 from visualizations.box_visualizer import visualize
 from core.utils.object.object_utils import objects_to_text_lines
+from core.utils.dir_utils import make_dir
 
 
 class Tracker():
@@ -47,7 +48,7 @@ class Tracker():
 
     def generate_text_output(self, output_file):
         """
-        Generates text output
+        Generates text output for KITTI evalution
         """
 
         text_lines = []
@@ -70,6 +71,23 @@ class Tracker():
             objects = tracks_by_frame[i]
             frame_output_path = os.path.join(output_path, str(i).zfill(6) + ".png")
             visualize(objects, camera_calib, frame_output_path, image=image)
+
+    def generate_track_output(self, output_path):
+        """
+        Generates track output for error plots
+        """
+        x_dir = os.path.join(output_path, "x")
+        P_dir = os.path.join(output_path, "P")
+        make_dir(x_dir)
+        make_dir(P_dir)
+
+        for track in self.tracklet_history:
+            bit_size = 32
+            track_id = track.id.int >> bit_size
+            x_file = os.path.join(x_dir, "{:d}.npy".format(track_id))
+            P_file = os.path.join(P_dir, "{:d}.npy".format(track_id))
+            np.save(x_file, track.x)
+            np.save(P_file, track.P)
 
     def get_tracks_by_frame(self):
         sequence_frame_tracks = []
@@ -100,9 +118,9 @@ class Tracker():
         for tracklet in unmatched_tracklets:
             tracklet.memory = tracklet.memory + 1
 
-        unmatched_tracklets_to_keep = [ x for x in unmatched_tracklets if x.memory < 10 ]
-        unmatched_tracklets_to_delete = [ x for x in unmatched_tracklets if x.memory >= 10]
-        
+        unmatched_tracklets_to_keep = [x for x in unmatched_tracklets if x.memory < 10]
+        unmatched_tracklets_to_delete = [x for x in unmatched_tracklets if x.memory >= 10]
+
         for tracklet in unmatched_tracklets_to_keep:
             self.current_tracklets.append(tracklet)
 

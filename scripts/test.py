@@ -51,6 +51,17 @@ def main():
                                             str(seq_id).zfill(4))
                     sequence_tracker.generate_visualization(output_path=vis_path)
 
+                # Output error and covariance plots
+                if config["output_tracks"]:
+                    track_dir = os.path.join(results_dir, "tracks", split,
+                                             class_, str(seq_id).zfill(4))
+
+                    # Make file if doesn't exists
+                    if not os.path.exists(track_dir):
+                        os.makedirs(track_dir)
+
+                    sequence_tracker.generate_track_output(output_path=track_dir)
+
     print("FPS {}".format(frames/duration))
 
 

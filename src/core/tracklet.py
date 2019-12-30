@@ -36,6 +36,9 @@ class Tracklet():
         self.x = self.x.reshape((11, 1))
         self.P = self.P.reshape((11, 11, 1))
 
+    def __len__(self):
+        return self.x.shape[1]
+
     def exists_for_frame(self, frame_idx):
         if self.creation_frame_idx <= frame_idx and frame_idx <= self._last_frame():
             return True
