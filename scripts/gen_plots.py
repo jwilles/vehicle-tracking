@@ -41,12 +41,11 @@ def main():
             P = P[:7, :7, :]
 
             # Compute error and std dev
+            t = np.arange(x.shape[1])
             error = x - gt_track
             error[3, :] = np.unwrap(error[3, :])
-            t = np.arange(error.shape[1])
             var = np.transpose(P.diagonal())
             std_dev = np.sqrt(var)
-
             for i, ylabel in enumerate(ylabels):
                 plot_file = os.path.join(plot_dir, str(i) + ".png")
                 plt.plot(t, error[i, :], t, 3*std_dev[i, :], 'r--', t, -3*std_dev[i, :], 'r--')

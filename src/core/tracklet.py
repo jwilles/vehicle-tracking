@@ -67,7 +67,7 @@ class Tracklet():
 
     def update_prediction(self):
         _x, _P = self.kf.update_prediction(self.x[:, -1], self.P[:, :, -1])
-
+        _x[3] = np.unwrap(np.array([_x[3]]))
         _x = _x.reshape((11, 1))
         _P = _P.reshape((11, 11, 1))
 
@@ -77,6 +77,7 @@ class Tracklet():
     def update_correction(self, detection):
         self.x[:, -1], self.P[:, :, -1] = self.kf.update_correction(
             self.x[:, -1], self.P[:, :, -1], self._format_detection(detection))
+        self.x[3, -1] = np.unwrap(np.array([self.x[3, -1]]))
         self.scores = np.append(self.scores, detection.score)
 
     def _last_frame(self):
