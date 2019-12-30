@@ -1,9 +1,11 @@
 import os
 import yaml
 import numpy as np
+import matplotlib.pyplot as plt
 
 import core
 from core.datasets.kitti.sequence.kitti_sequence import KittiSequence
+from core.utils.dir_utils import make_dir
 
 
 def main():
@@ -15,7 +17,9 @@ def main():
     detections_dir = os.path.join(core.data_dir(), "detections")
     dataset_dir = os.path.join("~/Kitti/tracking")
     results_dir = os.path.join(core.top_dir(), "results")
-    ylabels = ["X [m]", "Y [m", ]
+    plot_dir = os.path.join(results_dir, "plots")
+    make_dir(plot_dir)
+    ylabels = ["$x$ [m]", "$y$ [m]", "$x$ [m]", "$\theta$ [rad]", "$l$ [m]", "$h$ [m]", "$w$ [m]"]
     for split in config["splits"]:
         for class_ in config["classes"]:
             seq_id = 15
@@ -36,7 +40,18 @@ def main():
             P = np.load(P_file)
             P = P[:7, :7, :]
 
+            # Compute error and std dev
+            error = x - gt_track
+            error[3, :] = np.unwrap(error[3, :])
+            t = np.arange(error.shape[1])
+            var = np.transpose(P.diagonal())
+            std_dev = np.sqrt(var)
+
             for i, ylabel in enumerate(ylabels):
+                plot_file = os.path.join(plot_dir, str(i) + ".png")
+                plt.plot(t, error[i, :], t, 3*std_dev[i, :], 'r--', t, -3*std_dev[i, :], 'r--')
+                plt.savefig(plot_file)
+                plt.close()
 
 
 if __name__ == '__main__':
