@@ -253,7 +253,7 @@ class trackingEvaluation(object):
                     continue
                 # get fields from table
                 t_data.frame = int(float(fields[0]))     # frame
-                t_data.track_id = int(float(fields[1]))     # id
+                t_data.track_id = int(fields[1])     # id
                 # object type [car, pedestrian, cyclist, ...]
                 t_data.obj_type = fields[2].lower()
                 t_data.truncation = int(float(fields[3]))     # truncation [-1,0,1,2]

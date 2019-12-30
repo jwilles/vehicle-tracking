@@ -13,12 +13,12 @@ class KalmanFilter():
         self.A[2, 9] = self.frame_rate
         self.A[3, 10] = self.frame_rate
 
-        self.Q = np.eye(11) * 0.1
+        self.Q = np.eye(11) * 0.01
 
         # Observation
         self.C = np.eye(7)
         self.C = np.block([self.C,  np.zeros((7, 4))])
-        self.R = np.eye(7) * 0.1
+        self.R = np.eye(7) * 0.01
 
     def update_prediction(self, x, P):
         x = self.A @ x

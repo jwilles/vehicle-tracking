@@ -3,7 +3,7 @@ def object_to_text_line(frame, object_):
     Converts an object to a text line in KITTI format
     """
 
-    bit_size = 64
+    bit_size = 32
     track_id = object_.track_id.int >> bit_size
 
     # String class label
