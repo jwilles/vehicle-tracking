@@ -1,0 +1,6 @@
+splits: ['val']
+classes: ['car']
+num_sequences: 21
+output_text: True
+output_vis: False
+output_tracks: True
